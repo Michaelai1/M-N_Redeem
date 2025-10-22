@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&N Store - Redeem Your Offer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Redemption Form -->
+    <div class="container" id="redemptionForm">
+        <!-- M&N Logo -->
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-main">
+                    <span class="logo-m">M</span>
+                    <span class="logo-amp">&</span>
+                    <span class="logo-n">N</span>
+                </div>
+                <div class="logo-bar">
+                    <span class="logo-text">MACROS & NUTRITION</span>
+                </div>
+                <div class="logo-location">BLOOMINGTON</div>
+            </div>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="headline">Redeem Your Offer</h1>
+
+        <!-- Input Fields -->
+        <div class="input-container">
+            <input type="text" class="input-field" placeholder="Enter Email Here!" id="emailAddress">
+        </div>
+
+        <!-- CTA Button -->
+        <button class="cta-button" onclick="handleRedemption()">
+            REDEEM NOW
+        </button>
+    </div>
+
+    <!-- Thank You Page -->
+    <div class="container thank-you-container" id="thankYouPage" style="display: none;">
+        <!-- M&N Logo -->
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-main">
+                    <span class="logo-m">M</span>
+                    <span class="logo-amp">&</span>
+                    <span class="logo-n">N</span>
+                </div>
+                <div class="logo-bar">
+                    <span class="logo-text">MACROS & NUTRITION</span>
+                </div>
+                <div class="logo-location">BLOOMINGTON</div>
+            </div>
+        </div>
+
+        <!-- Thank You Content -->
+        <div class="thank-you-content">
+            <div class="success-icon">✓</div>
+            <h1 class="thank-you-headline">Thank You!</h1>
+            <p class="thank-you-message">Your validation email is on its way to: <span class="customer-email" id="customerEmail"></span></p>
+            <p class="next-steps">Please show the 'APPROVED' email to the cashier to receive your offer. (Check your spam folder if you don't see it!)</p>
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = 'https://michaelcarey.app.n8n.cloud/webhook/5be55b42-e92b-4c21-a032-531f174ca3b9';
+
+        function handleRedemption() {
+            const emailAddress = document.getElementById('emailAddress').value.trim();
+            
+            if (!emailAddress) {
+                alert('Please enter your email');
+                return;
+            }
+            
+            // Show thank you page
+            showThankYouPage(emailAddress);
+        }
+
+        function showLoadingState() {
+            const button = document.querySelector('.cta-button');
+            const originalText = button.textContent;
+            button.textContent = 'PROCESSING...';
+            button.disabled = true;
+            button.style.opacity = '0.7';
+            
+            // Store original text for restoration
+            button.dataset.originalText = originalText;
+        }
+
+        function hideLoadingState() {
+            const button = document.querySelector('.cta-button');
+            button.textContent = button.dataset.originalText || 'REDEEM NOW';
+            button.disabled = false;
+            button.style.opacity = '1';
+        }
+
+        function showErrorMessage(message) {
+            hideLoadingState();
+            alert(message);
+        }
+
+        function convertToLowercase(input) {
+            // Store cursor position
+            const cursorPosition = input.selectionStart;
+            
+            // Convert to lowercase
+            input.value = input.value.toLowerCase();
+            
+            // Restore cursor position
+            input.setSelectionRange(cursorPosition, cursorPosition);
+        }
+
+        function showThankYouPage(emailAddress) {
+            // Hide redemption form
+            document.getElementById('redemptionForm').style.display = 'none';
+            
+            // Show thank you page
+            document.getElementById('thankYouPage').style.display = 'flex';
+            
+            // Display customer email
+            document.getElementById('customerEmail').textContent = emailAddress;
+        }
+    </script>
+</body>
+</html>
